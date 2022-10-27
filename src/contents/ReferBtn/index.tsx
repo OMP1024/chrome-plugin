@@ -1,14 +1,21 @@
-import * as style from "./style.module.scss";
+import cssText from "data-text:./style.css";
 import type { PlasmoContentScript, PlasmoGetInlineAnchorList } from "plasmo";
 
 export const config: PlasmoContentScript = {
   matches:["https://twitter.com/*"],
+  css: ['style.css'],
+}
+
+export const getStyle = () => {
+  const style = document.createElement("style")
+  style.textContent = cssText
+  return style
 }
 
 const ReferBtn = () => {
   return (
     <>
-      <button className={style.refer_btn} onClick={() => {console.log("点击引用按钮")}}>引用</button>
+      <button className='refer_btn' onClick={() => {console.log("点击引用按钮")}}>引用</button>
     </>
   )
 }
@@ -19,6 +26,6 @@ export const getInlineAnchorList: PlasmoGetInlineAnchorList = () =>
 
 console.log("插入引用")
 
-export const getShadowHostId = () => "plasmo-inline-example-unique-id"
+export const getShadowHostId = () => "refer_btn"
 
 export default ReferBtn
