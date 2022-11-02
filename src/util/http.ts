@@ -16,7 +16,6 @@ const fetchGet = (url: string, params: any) => {
   }))
 }
 
-
 const fetchPost = (url: string,params: any) => {
   let allUrl = `${baseURL}${url}`
   return fetch(allUrl,

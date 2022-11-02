@@ -2,7 +2,7 @@ import cssText from "data-text:./homepagepublish.module.less";
 import type { PlasmoContentScript, PlasmoGetInlineAnchor } from "plasmo";
 import style from "./homepagepublish.module.less";
 import { Button } from "antd";
-import { Todo } from "../config/constant";
+import { fetchPost } from "../util/http";
 
 export const config: PlasmoContentScript = {
   matches: ["https://twitter.com/*"]
@@ -23,25 +23,34 @@ export const getShadowHostId = () => "homepage_publish";
 const HomePagePublish = () => {
 
   const sendMessage = (message) => {
-    chrome.runtime.sendMessage(message,function (response) {
-      console.log('收到来自后台的回复：' + response);
-    })
-  }
+    fetchPost("/bully_screen/post", message).then(response => {
+      console.log('xs: ' + response);
+      let id = response.data.id;
+      pay(id, message.money);
+    });
+  };
+
+  const pay = (shoutId,money) => {
+    document.dispatchEvent(new CustomEvent("xingshi_extension_pay", {
+      detail: {shoutId,money}
+    }));
+  };
 
   return (
     <div className={style.homepage}>
       <span>hello web3</span>
       <Button type="primary" onClick={() => {
-        sendMessage({todo: 'publish', data: {
-            text: "这是一条霸屏喊话",
-            fromUser: 1,
-            toUser: 2,
-            money: 0.001
-          }})
+        sendMessage({
+          text: "这是一条霸屏喊话",
+          fromUser: 1559796245748523011,
+          toUser: 1263466616605380608,
+          money: 0.0001
+        });
       }}>发布</Button>
     </div>
   );
 };
 console.log("插入发布区1111");
+
 
 export default HomePagePublish;
