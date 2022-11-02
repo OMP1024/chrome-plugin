@@ -152,7 +152,7 @@ async function contractPay({shoutId,money}) {
   const signer = provider.getSigner()
   const contract = new ethers.Contract(address,abi,signer)
   try {
-    const tx = await contract.pay(shoutId,{
+    const tx = await contract.pay(shoutId.toString(),{
       value: ethers.utils.parseEther(money.toString()),
     })
     await tx.wait()
