@@ -1,8 +1,7 @@
 import cssText from "data-text:./homepagepublish.module.less";
 import type { PlasmoContentScript, PlasmoGetInlineAnchor } from "plasmo";
 import style from "./homepagepublish.module.less";
-import { Button } from "antd";
-import { fetchPost } from "../util/http";
+import { fetchPost } from "../util/httpUtil";
 
 export const config: PlasmoContentScript = {
   matches: ["https://twitter.com/*"]
@@ -24,33 +23,33 @@ const HomePagePublish = () => {
 
   const sendMessage = (message) => {
     fetchPost("/bully_screen/post", message).then(response => {
-      console.log('xs: ' + response);
+      console.log("xs: " + response);
       let id = response.data.id;
       pay(id, message.money);
     });
   };
 
-  const pay = (shoutId,money) => {
+  const pay = (shoutId, money) => {
     document.dispatchEvent(new CustomEvent("xingshi_extension_pay", {
-      detail: {shoutId,money}
+      detail: { type: "pay", content: { shoutId, money } }
     }));
   };
 
   return (
     <div className={style.homepage}>
       <span>hello web3</span>
-      <Button type="primary" onClick={() => {
+      <button onClick={() => {
         sendMessage({
           text: "这是一条霸屏喊话",
           fromUser: 1559796245748523011,
           toUser: 1263466616605380608,
           money: 0.0001
         });
-      }}>发布</Button>
+      }}>发布
+      </button>
     </div>
   );
 };
 console.log("插入发布区1111");
-
 
 export default HomePagePublish;

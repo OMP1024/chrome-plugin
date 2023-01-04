@@ -1,3 +1,4 @@
+console.log('xs: inpageScript')
 const abi = [
   {
     "anonymous": false,
@@ -163,6 +164,22 @@ async function contractPay({shoutId,money}) {
   }
 }
 
+async function loginTwitter() {
+  Twitter.isLoggedIn(function(items) {
+    if (!items.oauth_token || !items.oauth_token_secret) {
+        Twitter.authenticate();
+    }
+  });
+}
+
 document.addEventListener('xingshi_extension_pay', async function(e) {
-  await contractPay(e.detail)
+  if (e.detail.type === "popup") {
+    console.log('xs: detail',e.detail)
+  }
+  if (e.detail.type === 'pay') {
+    await contractPay(e.detail.content)
+  }
+  if (e.detail.type === "twitter") {
+    await loginTwitter()
+  }
 });
